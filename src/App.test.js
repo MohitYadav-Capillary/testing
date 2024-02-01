@@ -14,30 +14,65 @@ describe("Write test case for todo", () => {
     expect(headingElement).toBeInTheDocument();
   });
 
-  //check if notification is present on click of add todo button
-  test("Notification present on click of add todo button", async () => {
+  //check if error is present on click of add todo button
+  test("Error notification present on click of add todo button with empty input", async () => {
     render(<App />);
 
-    const inputElement = screen.getByRole("textbox");
     const buttonElement = screen.getByRole("button");
     fireEvent.click(buttonElement);
     const notificationElement = await screen.findByText("Error");
     expect(notificationElement).toBeInTheDocument();
+  });
+
+  //check if success notification is present on click of add todo button with valid input
+  test("Success notification present on click of add todo button with valid input", async () => {
+    render(<App />);
+
+    const inputElement = screen.getByRole("textbox");
+    const buttonElement = screen.getByRole("button");
     fireEvent.change(inputElement, { target: { value: "test" } });
     fireEvent.click(buttonElement);
-    const notificationElement2 = await screen.findByText("Create Success");
+    const notificationElement = await screen.findByText("Create Success");
+    expect(notificationElement).toBeInTheDocument();
+  });
+
+  //check if todo is present in ui on click of add todo button with valid input
+  test("Todo present in ui on click of add todo button with valid input", async () => {
+    render(<App />);
+
+    const inputElement = screen.getByRole("textbox");
+    const buttonElement = screen.getByRole("button");
+    fireEvent.change(inputElement, { target: { value: "test" } });
+    fireEvent.click(buttonElement);
     const todoElement = await screen.findByText("test");
-    const deleteButtonElement = await screen.findByTestId("delete-button");
-    expect(notificationElement2).toBeInTheDocument();
     expect(todoElement).toBeInTheDocument();
+  });
+
+  // check if delete button is present in ui after adding todo
+  test("Delete button present in ui after adding todo", async () => {
+    render(<App />);
+
+    const inputElement = screen.getByRole("textbox");
+    const buttonElement = screen.getByRole("button");
+    fireEvent.change(inputElement, { target: { value: "test" } });
+    fireEvent.click(buttonElement);
+    const deleteButtonElement = await screen.findByTestId("delete-button");
     expect(deleteButtonElement).toBeInTheDocument();
   });
 
-  /*
-    
-    stimulate add todo
-    on success assert on notification and check if inserted data present in ui
-    if failure assert failure notification and new row should not be created
-    if delete button clicked assert on notification and check if deleted data is not present in ui
-  */
+  // check if success notification came on click of delete button and todo is not present in ui
+  test("Success notification present on click of delete button and todo is not present in ui", async () => {
+    render(<App />);
+
+    const inputElement = screen.getByRole("textbox");
+    const buttonElement = screen.getByRole("button");
+    fireEvent.change(inputElement, { target: { value: "test" } });
+    fireEvent.click(buttonElement);
+    const deleteButtonElement = await screen.findByTestId("delete-button");
+    fireEvent.click(deleteButtonElement);
+    const notificationElement = await screen.findByText("Delete success");
+    expect(notificationElement).toBeInTheDocument();
+    const todoElement = screen.queryByText("test");
+    expect(todoElement).not.toBeInTheDocument();
+  });
 });
