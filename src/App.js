@@ -7,7 +7,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 function App() {
   const [todos, setTodos] = useState([]);
   const [inputVal, setInputVal] = useState("");
-  console.log("****todos", todos);
+  // console.log("****todos", todos);
   const clearInputVal = () => {
     setInputVal("");
   };
@@ -61,6 +61,7 @@ function App() {
                 >
                   {todo.name}
                   <Button
+                    data-testid="delete-button"
                     type="primary"
                     icon={<DeleteOutlined />}
                     onClick={() => {
